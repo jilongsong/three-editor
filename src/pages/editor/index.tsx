@@ -13,6 +13,8 @@ import { useEditorStore } from "@/stores/editor-store"
 
 interface EditorProps {
   layout?: 'full' | 'canvas-only';
+  message?: string;
+  onEditorChange?: (e: { detail: { count: number } }) => void;
 }
 
 export default function Editor({ layout = 'canvas-only' }: EditorProps) {
