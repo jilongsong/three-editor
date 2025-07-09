@@ -45,12 +45,15 @@ export default function Editor({ layout = 'canvas-only' }: EditorProps) {
   }, [selectObjects])
 
   return (
-    <div className="h-screen flex flex-col bg-background">
+    <div
+      style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}
+      className="bg-background"
+    >
       {/* Top Toolbar */}
       {layout === 'full' && <Toolbar />}
 
       {/* Main Content */}
-      <div className="flex-1 flex overflow-hidden">
+      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
         {/* Left Sidebar */}
         {layout === 'full' && (
           <div className="w-80 border-r bg-card flex flex-col">
@@ -62,9 +65,17 @@ export default function Editor({ layout = 'canvas-only' }: EditorProps) {
         )}
 
         {/* Viewport */}
-        <div className="flex-1 relative bg-gradient-to-br from-slate-50 to-slate-100">
+        <div
+          style={{ flex: 1, position: 'relative', width: '100%', height: '100%' }}
+          className="relative bg-gradient-to-br from-slate-50 to-slate-100"
+        >
 
-          <Canvas camera={{ position: [5, 5, 5], fov: 60 }} shadows onPointerMissed={handleCanvasClick}>
+          <Canvas
+            camera={{ position: [5, 5, 5], fov: 60 }}
+            shadows
+            onPointerMissed={handleCanvasClick}
+            style={layout === 'canvas-only' ? { width: '100%', height: '100%' } : undefined}
+          >
             <Suspense fallback={null}>
               {/* Lighting */}
               <ambientLight intensity={0.4} />

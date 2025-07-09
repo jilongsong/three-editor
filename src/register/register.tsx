@@ -39,7 +39,7 @@ function withWrapper(Component: React.ComponentType<{ message?: string; onEditor
       }
     };
 
-    return <div ref={ref}><Component {...internalProps} onEditorChange={onEditorChange} /></div>;
+    return <div style={{ width: '100%', height: '100%' }} ref={ref}><Component {...internalProps} onEditorChange={onEditorChange} /></div>;
   };
 }
 
