@@ -4,25 +4,27 @@ import reactToWebComponent from 'react-to-webcomponent';
 import MyEditor from '../pages/editor/index';
 
 function withWrapper(Component: React.ComponentType<{ message?: string; onEditorChange?: (e: { detail: { count: number } }) => void }>) {
-  return function Wrapped(props: { message?: string; onEditorChange?: (e: { detail: { count: number } }) => void; dispatchEvent?: (event: Event) => void }) {
+  return function Wrapped(props: any) {
     const ref = useRef<HTMLDivElement>(null);
+    const [internalProps, setInternalProps] = React.useState(props);
 
     useEffect(() => {
-      // 将 WebComponent 实例传递给子组件
-      if (ref.current && ref.current.parentElement) {
-        (ref.current as any).__wc = ref.current.parentElement;
+      if (ref.current?.parentElement) {
+        const wc = ref.current.parentElement as any;
+        wc.updateProps = (newProps: any) => {
+          setInternalProps((prev: any) => ({ ...prev, ...newProps }));
+        };
       }
     }, []);
 
     const onEditorChange = (e: { detail: { count: number } }) => {
-      // 优先用 props.dispatchEvent
       if (props.dispatchEvent) {
         props.dispatchEvent(new CustomEvent('editor-change', {
           detail: e.detail,
           bubbles: true,
           composed: true,
         }));
-      } else if (ref.current && ref.current.parentElement) {
+      } else if (ref.current?.parentElement) {
         ref.current.parentElement.dispatchEvent(new CustomEvent('editor-change', {
           detail: e.detail,
           bubbles: true,
@@ -37,7 +39,7 @@ function withWrapper(Component: React.ComponentType<{ message?: string; onEditor
       }
     };
 
-    return <div ref={ref}><Component {...props} onEditorChange={onEditorChange} /></div>;
+    return <div ref={ref}><Component {...internalProps} onEditorChange={onEditorChange} /></div>;
   };
 }
 
@@ -46,25 +48,36 @@ const BaseWebComponent = reactToWebComponent(withWrapper(MyEditor), React, React
 });
 
 class MyReactEditorElement extends (BaseWebComponent as typeof HTMLElement) {
+  static get observedAttributes() {
+    return ['message'];
+  }
+
   get message() {
     return this.getAttribute('message') || '';
   }
+
   set message(val: string) {
     this.setAttribute('message', val);
-    if (typeof (this as any)._updater === 'function') {
-      (this as any)._updater();
-    }
   }
+
   setMessage(val: string) {
     this.message = val;
-    this.dispatchEvent(new CustomEvent('set-message', { detail: val }));
   }
+
   triggerChange(detail: any) {
     this.dispatchEvent(new CustomEvent('editor-change', {
       detail,
       bubbles: true,
       composed: true,
     }));
+  }
+
+  updateProps?: (newProps: Partial<{ message: string }>) => void;
+
+  attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+    if (name === 'message' && oldValue !== newValue) {
+      this.updateProps?.({ message: newValue });
+    }
   }
 }
 
