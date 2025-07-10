@@ -49,6 +49,7 @@ export default function Editor({ layout = 'canvas-only', data }: EditorProps) {
     if (data) {
       try {
         const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+        console.log('data', data);
         importScene(parsedData);
       } catch (error) {
         console.error('Failed to parse data:', error);

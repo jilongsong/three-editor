@@ -62,7 +62,8 @@ class MyReactEditorElement extends (BaseWebComponent as typeof HTMLElement) {
 
   setData(val: any) {
     console.log('val', val)
-    this.data = val;
+    const dataString = typeof val === 'object' ? JSON.stringify(val) : val;
+    this.data = dataString;
   }
 
   triggerChange(detail: any) {
@@ -77,6 +78,7 @@ class MyReactEditorElement extends (BaseWebComponent as typeof HTMLElement) {
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
     if (name === 'data' && oldValue !== newValue) {
+      console.log('data changed', newValue);
       this.updateProps?.({ data: newValue });
     }
   }
