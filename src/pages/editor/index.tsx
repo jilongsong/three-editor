@@ -45,6 +45,7 @@ export default function Editor({ layout = 'canvas-only', data }: EditorProps) {
   }, [selectObjects])
 
   useEffect(()=>{
+    console.log('data',data);
     data && importScene(data)
   },[data])
 
