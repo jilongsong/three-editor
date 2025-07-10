@@ -1,4 +1,4 @@
-import { Suspense, useCallback, useRef } from "react"
+import { Suspense, useCallback, useRef, useEffect } from "react"
 import { Canvas } from "@react-three/fiber"
 import { OrbitControls, Grid, Stats, Environment, GizmoHelper, GizmoViewport } from "@react-three/drei"
 import { Toolbar } from "@/components/ui/toolbar"
@@ -13,12 +13,12 @@ import { useEditorStore } from "@/stores/editor-store"
 
 interface EditorProps {
   layout?: 'full' | 'canvas-only';
-  message?: string;
-  onEditorChange?: (e: { detail: { count: number } }) => void;
+  data?: any;
+  onEditorChange?: (e: any) => void;
 }
 
-export default function Editor({ layout = 'canvas-only' }: EditorProps) {
-  const { objects, selectedObjects, selectObjects, showGrid, showStats, gridSize, isTransforming } = useEditorStore()
+export default function Editor({ layout = 'canvas-only', data }: EditorProps) {
+  const { objects, selectedObjects, selectObjects, showGrid, showStats, gridSize, isTransforming, importScene } = useEditorStore()
   const orbitControlsRef = useRef<any>(null)
 
   useKeyboard()
@@ -43,6 +43,10 @@ export default function Editor({ layout = 'canvas-only' }: EditorProps) {
   const handleCanvasClick = useCallback(() => {
     selectObjects([])
   }, [selectObjects])
+
+  useEffect(()=>{
+    importScene(data)
+  },[data])
 
   return (
     <div

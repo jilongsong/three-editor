@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import reactToWebComponent from 'react-to-webcomponent';
 import MyEditor from '../pages/editor/index';
 
-function withWrapper(Component: React.ComponentType<{ message?: string; onEditorChange?: (e: { detail: { count: number } }) => void }>) {
+function withWrapper(Component: React.ComponentType<{ data?: string; onEditorChange?: (e: { detail: { count: number } }) => void }>) {
   return function Wrapped(props: any) {
     const ref = useRef<HTMLDivElement>(null);
     const [internalProps, setInternalProps] = React.useState(props);
@@ -49,19 +49,20 @@ const BaseWebComponent = reactToWebComponent(withWrapper(MyEditor), React, React
 
 class MyReactEditorElement extends (BaseWebComponent as typeof HTMLElement) {
   static get observedAttributes() {
-    return ['message'];
+    return ['data'];
   }
 
-  get message() {
-    return this.getAttribute('message') || '';
+  get data() {
+    return this.getAttribute('data') || '';
   }
 
-  set message(val: string) {
-    this.setAttribute('message', val);
+  set data(val: string) {
+    this.setAttribute('data', val);
   }
 
-  setMessage(val: string) {
-    this.message = val;
+  setData(val: any) {
+    console.log('val', val)
+    this.data = val;
   }
 
   triggerChange(detail: any) {
@@ -72,11 +73,11 @@ class MyReactEditorElement extends (BaseWebComponent as typeof HTMLElement) {
     }));
   }
 
-  updateProps?: (newProps: Partial<{ message: string }>) => void;
+  updateProps?: (newProps: Partial<{ data: string }>) => void;
 
   attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-    if (name === 'message' && oldValue !== newValue) {
-      this.updateProps?.({ message: newValue });
+    if (name === 'data' && oldValue !== newValue) {
+      this.updateProps?.({ data: newValue });
     }
   }
 }
