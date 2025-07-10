@@ -11,7 +11,7 @@ export default defineConfig({
       entry: './src/register/register.tsx', // ✅ 改为你的实际入口文件
       formats: ['iife'],
       name: 'MyReactEditor',
-      fileName: () => 'three-editor_1.0.2.js',
+      fileName: () => 'three-editor_1.0.3.js',
     },
     rollupOptions: {
     },

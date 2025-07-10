@@ -44,10 +44,17 @@ export default function Editor({ layout = 'canvas-only', data }: EditorProps) {
     selectObjects([])
   }, [selectObjects])
 
-  useEffect(()=>{
-    console.log('data',data);
-    data && importScene(data)
-  },[data])
+  useEffect(() => {
+    console.log('data', data);
+    if (data) {
+      try {
+        const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
+        importScene(parsedData);
+      } catch (error) {
+        console.error('Failed to parse data:', error);
+      }
+    }
+  }, [data]);
 
   return (
     <div
