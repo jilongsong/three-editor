@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Eye, EyeOff, Lock, Unlock, Search } from "lucide-react"
@@ -45,7 +45,6 @@ export function HierarchyPanel() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Hierarchy</CardTitle>
         <div className="relative">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -56,8 +55,8 @@ export function HierarchyPanel() {
           />
         </div>
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="max-h-96 overflow-y-auto">
+      <CardContent className="flex flex-col h-full px-2">
+        <div className="flex-1 overflow-y-auto custom-scrollbar-hide">
           {filteredObjects.length === 0 ? (
             <div className="p-4 text-center text-sm text-muted-foreground">
               {searchTerm ? "No objects found" : "No objects in scene"}

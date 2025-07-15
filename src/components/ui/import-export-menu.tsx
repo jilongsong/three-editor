@@ -61,27 +61,27 @@ export function ImportExportMenu() {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="sm" title="File Operations">
-            <Save className="w-4 h-4" />
+            <FolderOpen className="w-4 h-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start">
           <DropdownMenuItem onClick={() => setIsExportDialogOpen(true)}>
-            <Download className="w-4 h-4 mr-2" />
-            Export Scene
+            <Save className="w-4 h-4 mr-2" />
+            导出文件
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleImport}>
             <Upload className="w-4 h-4 mr-2" />
-            Import Scene
+            导入文件
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleRender}>
             <FileImage className="w-4 h-4 mr-2" />
-            Render Image
+            渲染为图像
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleClearScene} className="text-destructive">
             <FolderOpen className="w-4 h-4 mr-2" />
-            Clear Scene
+            清空画布
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

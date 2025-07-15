@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -13,20 +13,17 @@ import {
   Cone,
   Square,
   Circle,
-  Plus,
   Package,
   Hexagon,
   Triangle,
   Diamond,
   Octagon,
   Pentagon,
-  Monitor,
 } from "lucide-react"
 import { useEditorStore } from "@/stores/editor-store"
 import { AddObjectCommand } from "@/commands/object-commands"
 import { ModelUpload } from "@/components/ui/model-upload"
-import { defaultWidgetStyle } from "@/utils/widget-templates"
-import type { SceneObject, ObjectType, UploadedModel, HtmlWidget } from "@/types"
+import type { SceneObject, ObjectType, UploadedModel } from "@/types"
 
 const BASIC_SHAPES: Array<{
   type: ObjectType
@@ -68,7 +65,7 @@ const SPECIAL_SHAPES: Array<{
 ]
 
 export function ToolsPanel() {
-  const { executeCommand, uploadedModels, objects } = useEditorStore()
+  const { executeCommand, uploadedModels } = useEditorStore()
 
   const createObject = (type: ObjectType, modelUrl?: string) => {
     const object: SceneObject = {
@@ -96,68 +93,14 @@ export function ToolsPanel() {
     executeCommand(command)
   }
 
-  const createHtmlWidget = () => {
-    // 计算新的位置，避免重叠
-    const existingWidgets = Object.values(objects).filter((obj) => obj.type === "htmlWidget")
-    const offsetX = existingWidgets.length * 2 // 每个新widget向右偏移2个单位
-    const offsetZ = Math.floor(existingWidgets.length / 3) * 2 // 每3个widget换一行
-
-    const widget: HtmlWidget = {
-      id: `widget_${Date.now()}`,
-      name: `HTML Widget ${existingWidgets.length + 1}`,
-      template: `
-        <div style="text-align: center; padding: 20px;">
-          <h2 style="margin: 0 0 10px 0; color: #1f2937;">{{title}}</h2>
-          <p style="margin: 0; color: #6b7280;">{{description}}</p>
-        </div>
-      `,
-      style: defaultWidgetStyle,
-      autoRefresh: false,
-      refreshInterval: 5000,
-      position3D: { x: 0, y: 0, z: 0 },
-      lookAtCamera: true,
-      scale3D: 1,
-    }
-
-    const object: SceneObject = {
-      id: `htmlWidget_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
-      name: `HTML Widget ${existingWidgets.length + 1}`,
-      type: "htmlWidget",
-      transform: {
-        position: { x: offsetX, y: 1, z: offsetZ }, // 使用计算的偏移位置
-        rotation: { x: 0, y: 0, z: 0 },
-        scale: { x: 1, y: 1, z: 1 },
-      },
-      material: {
-        color: "#4F46E5",
-        roughness: 0.7,
-        metalness: 0.1,
-        opacity: 1,
-      },
-      visible: true,
-      locked: false,
-      animations: [],
-      htmlWidget: widget,
-    }
-
-    const command = new AddObjectCommand(object)
-    executeCommand(command)
-  }
-
   const createModelObject = (model: UploadedModel) => {
     createObject("model", model.url)
   }
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Plus className="w-5 h-5" />
-          Create Objects
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <ScrollArea className="h-96">
+      <CardContent className="flex flex-col h-full">
+        <ScrollArea className="flex-1">
           <div className="space-y-4">
             {/* Basic Shapes */}
             <div>
@@ -216,25 +159,7 @@ export function ToolsPanel() {
                 ))}
               </div>
             </div>
-
-            <Separator />
-
-            {/* HTML Widgets */}
-            <div>
-              <h4 className="text-sm font-medium mb-2 text-muted-foreground">HTML Widgets</h4>
-              <Button
-                variant="outline"
-                className="w-full h-12 flex-col gap-1 bg-transparent hover:bg-green-50 border-green-200"
-                onClick={createHtmlWidget}
-              >
-                <Monitor className="w-4 h-4" />
-                <span className="text-xs">HTML Widget</span>
-              </Button>
-              <p className="text-xs text-muted-foreground mt-1 text-center">
-                {Object.values(objects).filter((obj) => obj.type === "htmlWidget").length} widgets created
-              </p>
-            </div>
-
+            
             <Separator />
 
             {/* 3D Models */}

@@ -1,4 +1,5 @@
 import { useEditorStore } from "@/stores/editor-store"
+import illustrateCard  from '@/components/ui/illustrate-card'
 
 export function StatusBar() {
   const { objects, selectedObjects, transformMode, isTransforming } = useEditorStore()

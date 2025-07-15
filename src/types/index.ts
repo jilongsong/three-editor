@@ -98,9 +98,11 @@ export interface SceneObject {
     height: number
     depth: number
   }
+  property?: string
+  time?: string
 }
 
-export type ObjectType =
+  export type ObjectType =
   | "box"
   | "sphere"
   | "cylinder"
@@ -117,7 +119,14 @@ export type ObjectType =
   | "pyramid"
   | "prism"
   | "model"
-  | "htmlWidget" // 新增HTML Widget类型
+  | "htmlWidget"
+  | "camera"
+  | "sensor"
+  | "fire_alarm"
+  | "access_control"
+  | "inspection_robot"
+  | "electric_meter"
+  | "custom"
 
 export type TransformMode = "translate" | "rotate" | "scale"
 

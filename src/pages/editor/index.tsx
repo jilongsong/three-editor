@@ -1,6 +1,6 @@
 import { Suspense, useCallback, useRef, useEffect } from "react"
 import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Grid, Stats, Environment, GizmoHelper, GizmoViewport } from "@react-three/drei"
+import { OrbitControls, Grid, Environment, GizmoHelper, GizmoViewport } from "@react-three/drei"
 import { Toolbar } from "@/components/ui/toolbar"
 import { StatusBar } from "@/components/ui/status-bar"
 import { ToolsPanel } from "@/components/panels/tools-panel"
@@ -10,6 +10,7 @@ import { SceneObjectComponent } from "@/components/scene-object"
 import { useKeyboard } from "@/hooks/use-keyboard"
 import { useAnimation } from "@/hooks/use-animation"
 import { useEditorStore } from "@/stores/editor-store"
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 interface EditorProps {
   layout?: 'full' | 'canvas-only';
@@ -17,8 +18,8 @@ interface EditorProps {
   onEditorChange?: (e: any) => void;
 }
 
-export default function Editor({ layout = 'canvas-only', data }: EditorProps) {
-  const { objects, selectedObjects, selectObjects, showGrid, showStats, gridSize, isTransforming, importScene } = useEditorStore()
+export default function Editor({ layout = 'full', data }: EditorProps) {
+  const { objects, selectedObjects, selectObjects, showGrid, gridSize, isTransforming, importScene } = useEditorStore()
   const orbitControlsRef = useRef<any>(null)
 
   useKeyboard()
@@ -45,11 +46,9 @@ export default function Editor({ layout = 'canvas-only', data }: EditorProps) {
   }, [selectObjects])
 
   useEffect(() => {
-    console.log('data', data);
     if (data) {
       try {
         const parsedData = typeof data === 'string' ? JSON.parse(data) : data;
-        console.log('data', data);
         importScene(parsedData);
       } catch (error) {
         console.error('Failed to parse data:', error);
@@ -71,8 +70,18 @@ export default function Editor({ layout = 'canvas-only', data }: EditorProps) {
         {layout === 'full' && (
           <div className="w-80 border-r bg-card flex flex-col">
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
-              <ToolsPanel />
-              <HierarchyPanel />
+              <Tabs defaultValue="tools" className="w-full">
+                <TabsList>
+                  <TabsTrigger value="tools">工具</TabsTrigger>
+                  <TabsTrigger value="hierarchy">层级</TabsTrigger>
+                </TabsList>
+                <TabsContent value="tools">
+                  <ToolsPanel />
+                </TabsContent>
+                <TabsContent value="hierarchy">
+                  <HierarchyPanel />
+                </TabsContent>
+              </Tabs>
             </div>
           </div>
         )}
@@ -153,16 +162,13 @@ export default function Editor({ layout = 'canvas-only', data }: EditorProps) {
               <GizmoHelper alignment="bottom-right" margin={[80, 80]}>
                 <GizmoViewport axisColors={["#ff6b35", "#4ade80", "#3b82f6"]} labelColor="black" />
               </GizmoHelper>
-
-              {/* Stats positioned in top right */}
-              {showStats && layout === 'full' && <StatsComponent />}
             </Suspense>
           </Canvas>
 
           {/* Transform Status Indicator */}
           {isTransforming && (
             <div className="absolute top-4 left-4 bg-primary text-primary-foreground px-3 py-1 rounded-md text-sm font-medium">
-              Transforming Object
+              Transforming...
             </div>
           )}
         </div>
@@ -181,9 +187,4 @@ export default function Editor({ layout = 'canvas-only', data }: EditorProps) {
       {layout === 'full' && <StatusBar />}
     </div>
   )
-}
-
-// Custom Stats component that positions itself in the top right
-function StatsComponent() {
-  return <Stats showPanel={0} className="stats-container" />
 }
