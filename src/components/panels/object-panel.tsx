@@ -82,7 +82,6 @@ function SingleObjectPanel({
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            Properties
             <Badge variant="secondary" className="text-xs">
               {object.type}
             </Badge>
@@ -103,16 +102,16 @@ function SingleObjectPanel({
       <CardContent>
         <Tabs defaultValue={isHtmlWidget ? "widget" : "transform"} className="w-full">
           <TabsList className={`grid w-full ${isHtmlWidget ? "grid-cols-5" : "grid-cols-4"}`}>
-            <TabsTrigger value="transform">Transform</TabsTrigger>
-            {!isHtmlWidget && <TabsTrigger value="material">Material</TabsTrigger>}
+            <TabsTrigger value="transform">转换</TabsTrigger>
+            {!isHtmlWidget && <TabsTrigger value="material">材质</TabsTrigger>}
             {isHtmlWidget && <TabsTrigger value="widget">Widget</TabsTrigger>}
-            <TabsTrigger value="animation">Animation</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+            <TabsTrigger value="animation">动画</TabsTrigger>
+            <TabsTrigger value="settings">设置</TabsTrigger>
           </TabsList>
 
           <TabsContent value="transform" className="space-y-4">
             <div>
-              <Label>Name</Label>
+              <Label className="py-2">名称</Label>
               <Input value={object.name} onChange={(e) => onUpdate(object.id, { name: e.target.value })} />
             </div>
 
@@ -137,17 +136,17 @@ function SingleObjectPanel({
 
           <TabsContent value="settings" className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label>Visible</Label>
+              <Label>可见性</Label>
               <Switch checked={object.visible} onCheckedChange={(visible) => onUpdate(object.id, { visible })} />
             </div>
             <div className="flex items-center justify-between">
-              <Label>Locked</Label>
+              <Label>锁定</Label>
               <Switch checked={object.locked} onCheckedChange={(locked) => onUpdate(object.id, { locked })} />
             </div>
 
             {/* Object Info */}
             <div className="pt-4 border-t space-y-2">
-              <Label className="text-xs font-medium text-muted-foreground">Object Info</Label>
+              <Label className="text-xs font-medium text-muted-foreground">模型属性</Label>
               <div className="text-xs space-y-1">
                 <div className="flex justify-between">
                   <span>Type:</span>
@@ -291,7 +290,7 @@ function TransformControls({
       {dimensions && (
         <>
           <div className="flex items-center justify-between">
-            <Label className="text-sm font-medium">Dimensions</Label>
+            <Label className="text-sm font-medium">维度</Label>
             <Button variant="ghost" size="sm" onClick={() => setShowDimensions(!showDimensions)}>
               <Maximize2 className="w-4 h-4" />
             </Button>
@@ -320,7 +319,7 @@ function TransformControls({
 
       {/* Position */}
       <div>
-        <Label className="text-sm font-medium">Position</Label>
+        <Label className="text-sm font-medium">定位</Label>
         <div className="grid grid-cols-3 gap-2 mt-2">
           {(["x", "y", "z"] as const).map((axis) => (
             <div key={axis}>
@@ -338,7 +337,7 @@ function TransformControls({
 
       {/* Rotation */}
       <div>
-        <Label className="text-sm font-medium">Rotation (degrees)</Label>
+        <Label className="text-sm font-medium">旋转 (°)</Label>
         <div className="grid grid-cols-3 gap-2 mt-2">
           {(["x", "y", "z"] as const).map((axis) => (
             <div key={axis}>
@@ -359,7 +358,7 @@ function TransformControls({
       {/* Scale */}
       <div>
         <div className="flex items-center justify-between mb-2">
-          <Label className="text-sm font-medium">Scale</Label>
+          <Label className="text-sm font-medium">缩放</Label>
           <Button
             variant="ghost"
             size="sm"

@@ -1,5 +1,7 @@
 import { useEditorStore } from "@/stores/editor-store"
 import illustrateCard  from '@/components/ui/illustrate-card'
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Info } from 'lucide-react';
 
 export function StatusBar() {
   const { objects, selectedObjects, transformMode, isTransforming } = useEditorStore()
@@ -18,6 +20,16 @@ export function StatusBar() {
 
       <div className="flex items-center gap-4">
         <span>{isTransforming ? "Transforming..." : "Ready"}</span>
+        <Popover>
+          <PopoverTrigger asChild>
+            <button className="p-1 rounded hover:bg-muted transition-colors" title="操作说明">
+              <Info className="w-4 h-4" />
+            </button>
+          </PopoverTrigger>
+          <PopoverContent align="end">
+            {illustrateCard()}
+          </PopoverContent>
+        </Popover>
       </div>
     </div>
   )
